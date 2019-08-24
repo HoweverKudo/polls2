@@ -1,0 +1,36 @@
+version : '3'
+services :
+
+
+  db:
+    build: ./db
+    restart : always
+    environment :
+      POSTGRES_USER : root
+      POSTGRES_DB : db
+      POSTGRES_PASSWORD : qwerty
+    expose:
+      - "5432"
+    
+  7th_container :
+  
+  #カレントディレクトリ中にあるDockerfileを参照してビルドする
+    build : ./twitter
+    ports :                 # 公開ポート
+      - "8040:8040"             # 外部公開ポート番号：コンテナのポート番号（存在していないと接続できない）
+      # bashを打っておけばとりあえず動かしたままにできる
+      # 再現性を意識して実行するcommandを記述すること
+    command : bash -c "sleep 2 && pip install -r twitter/requirements.txt && python twitter/manage.py makemigrations && python twitter/manage.py migrate && python twitter/manage.py runserver 0.0.0.0:8040"
+    #command : bash -c "pip install -r fake_twitter_site/requirements.txt && python fake_twitter_site/manage.py migrate && python fake_twitter_site/manage.py createsuperuser && python fake_twitter_site/manage.py runserver 0.0.0.0:8030"
+    #command : bash
+    volumes : 
+      - ".:/usr/src/app"
+    environment :
+      7TH_CONTAINER_DB_PASSWORD :  aaaaa 
+    depends_on :
+      - db
+    links:
+      - db:db
+    tty: true
+    stdin_open: true
+  
