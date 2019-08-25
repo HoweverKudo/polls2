@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'polls',
     'rest_framework.authtoken',
+    'tweet',
 ]
 
 MIDDLEWARE = [

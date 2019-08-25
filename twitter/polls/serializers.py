@@ -10,6 +10,9 @@ class VoteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ChoiceSerializer(serializers.ModelSerializer):
+    """
+    many=Trueでデータがlist形式になる場合も処理できるようになる
+    """
     votes = VoteSerializer(many=True, required=False)
 
     class Meta:

@@ -4,22 +4,10 @@ from rest_framework.response import Response
 
 from .models import Poll, Choice
 from .serializers import PollSerializer, ChoiceSerializer, VoteSerializer, UserSerializer
+from django.contrib.auth.models import User
 
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import PermissionDenied
-
-# class PollList(APIView):
-#     def get(self, request):
-#         polls = Poll.objects.all()[:20]
-#         data = PollSerializer(polls, many=True).data
-#         return Response(data)
-
-
-# class PollDetail(APIView):
-#     def get(self, request, pk):
-#         poll = get_object_or_404(Poll, pk=pk)
-#         data = PollSerializer(poll).data
-#         return Response(data)
 
 
 # class PollList(generics.ListCreateAPIView):
@@ -41,7 +29,9 @@ from rest_framework.exceptions import PermissionDenied
 class PollViewSet(viewsets.ModelViewSet):
     queryset = Poll.objects.all()
     serializer_class = PollSerializer
-
+    """
+    destroyメソッドをoverride
+    """
     def destroy(self, request, *args, **kwargs):
         poll = Poll.objects.get(pk=self.kwargs["pk"])
         if not request.user == poll.created_by:
@@ -49,24 +39,17 @@ class PollViewSet(viewsets.ModelViewSet):
         return super().destroy(request, *args, **kwargs)
     
 
-# class ChoiceList(generics.ListCreateAPIView):
-#     queryset = Choice.objects.all()
-#     serializer_class = ChoiceSerializer
-
-# class CreateVote(generics.CreateAPIView):
-#     serializer_class = VoteSerializer
-
 class ChoiceList(generics.ListCreateAPIView):
     """
     同じ質問に属する選択肢を取り出す
     適切なrestを作るためにネストしていく
     get_querysetメソッドをoverrideする
     """
+    serializer_class = ChoiceSerializer
+
     def get_queryset(self):
         queryset = Choice.objects.filter(poll_id=self.kwargs["pk"])
         return queryset
-    serializer_class = ChoiceSerializer
-
     def post(self, request, *args, **kwargs):
         poll = Poll.objects.get(pk=self.kwargs["pk"])
         if not request.user == poll.created_by:
@@ -77,8 +60,9 @@ class ChoiceList(generics.ListCreateAPIView):
 class CreateVote(APIView):
     serializer_class = VoteSerializer
     """
-    choice_pkを受け取ってからuketottekaravoteさせるようにする
+    choice_pkを受け取ってからvoteさせるようにする
     こうすることでvoteを<choice_pk>の下の階層にネストできる
+    postメソッドをoverride
     """
     def post(self, request, pk, choice_pk):
         voted_by = request.data.get("voted_by")
@@ -99,6 +83,17 @@ class UserCreate(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
     serializer_class = UserSerializer
+
+class UserList(generics.ListAPIView):
+    """
+    Listだけ表示したいならListAPIViewを用いる
+    """
+    queryset = User.objects.all().select_related()
+    serializer_class = UserSerializer 
+    def list(self, request):
+        data = UserSerializer(User.objects.select_related(), many=True).data
+        return Response(status=200, data=data)
+    
 
 
 class LoginView(APIView):
