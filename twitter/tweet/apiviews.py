@@ -15,11 +15,11 @@ class TweetViewSet(viewsets.ModelViewSet):
     """
     serializer_class = TweetSerializer
     def post(self, request, *args, **kwargs):
-        print(self.kwargs["pk"])
-        print(request.data.get("created_by"))
+        # print(self.kwargs["pk"])
+        # print(request.data.get("created_by"))
         if str(self.kwargs["pk"]) != request.data.get("created_by"):
             raise PermissionDenied("You cannot create tweet with this user.")
-        print(request.data)
+        # print(request.data)
         return super().post(request, *args, **kwargs)
     def destroy(self, request, *args, **kwargs):
         if str(self.kwargs["pk"]) != request.data.get("created_by"):
@@ -38,15 +38,15 @@ class PersonalTweetViewSet(viewsets.ModelViewSet):
         queryset = Tweet.objects.filter(user_id=self.kwargs["pk"])
         return queryset
     def post(self, request, *args, **kwargs):
-        print(self.kwargs["pk"])
-        print(request.data.get("created_by"))
+        # print(self.kwargs["pk"])
+        # print(request.data.get("created_by"))
         if   str(self.kwargs["pk"]) != request.data.get("created_by"):
             raise PermissionDenied("You cannot create tweet with this user.")
-        print(request.data.get("id"))
+        # print(request.data.get("id"))
         return super().post(request, *args, **kwargs)
     def destroy(self, request, *args, **kwargs):
-        print(self.kwargs["pk"])
-        print(request.data.get("created_by"))
+        # print(self.kwargs["pk"])
+        # print(request.data.get("created_by"))
         if str(self.kwargs["pk"]) != request.data.get("created_by"):
             raise PermissionDenied("You cannot delete this tweet.")
         return super().destroy(request, *args, **kwargs)

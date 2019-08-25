@@ -1,6 +1,6 @@
 from django.urls import path
 from .apiviews import PollViewSet, ChoiceList, CreateVote, UserCreate, LoginView, UserList
-from tweet.apiviews import TweetViewSet, PersonalTweetViewSet
+from tweet.apiviews import TweetViewSet
 from rest_framework.routers import DefaultRouter
 
 from rest_framework.authtoken import views
