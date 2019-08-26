@@ -30,6 +30,7 @@ class PollViewSet(viewsets.ModelViewSet):
     queryset = Poll.objects.all()
     serializer_class = PollSerializer
     """
+    ViewSetにはlist, create, retrieve, destroyがまとめて入っている
     destroyメソッドをoverride
     """
     def destroy(self, request, *args, **kwargs):
@@ -92,6 +93,7 @@ class UserList(generics.ListAPIView):
     serializer_class = UserSerializer 
     def list(self, request):
         data = UserSerializer(User.objects.select_related(), many=True).data
+        print(data)
         return Response(status=200, data=data)
     
 

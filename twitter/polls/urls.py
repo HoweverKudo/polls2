@@ -1,6 +1,6 @@
 from django.urls import path
 from .apiviews import PollViewSet, ChoiceList, CreateVote, UserCreate, LoginView, UserList
-from tweet.apiviews import TweetViewSet
+from tweet.apiviews import TweetViewSet, PersonalPageViewSet
 from rest_framework.routers import DefaultRouter
 
 from rest_framework.authtoken import views
@@ -12,6 +12,7 @@ routerで登録するのは一箇所のurls.pyにまとめて書かないと読�
 router = DefaultRouter()
 router.register('polls', PollViewSet, base_name='polls')
 router.register('all_tweets', TweetViewSet, base_name='tweets')
+router.register('all_tweets/users', PersonalPageViewSet, base_name='personal_page')
 
 
 
@@ -21,7 +22,7 @@ urlpatterns = [
     path("polls/<int:pk>/choices/<int:choice_pk>/vote/", CreateVote.as_view(), name="create_vote"),
     path("signup/", UserCreate.as_view(), name="user_create"),
     path("login/", LoginView.as_view(), name="login"),
-    path("all_tweets/users/", UserList.as_view(), name="user_list"),
+    path("all_tweets/users/list/", UserList.as_view(), name="user_list"),
 ]
 
 urlpatterns += router.urls

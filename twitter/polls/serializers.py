@@ -33,9 +33,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'password')
         """
         passwordは書き込みしかできないようにする
-        →createのreturn値からpasswordを除外する
+        →createのreturn値からpassword, emailを除外する
         """
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {'password': {'write_only': True},
+                            'email': {'write_only': True}}
 
     def create(self, validated_data):
         """
