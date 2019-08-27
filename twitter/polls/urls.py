@@ -10,8 +10,9 @@ PollViewSetをpollsという名前でrouterにregisterする
 routerで登録するのは一箇所のurls.pyにまとめて書かないと読み込んでくれない仕様になっているので注意
 """
 router = DefaultRouter()
+
 router.register('polls', PollViewSet, base_name='polls')
-router.register('all_tweets', TweetViewSet, base_name='tweets')
+router.register('all_tweets', TweetViewSet, base_name='all_tweets')
 router.register('all_tweets/users', PersonalPageViewSet, base_name='personal_page')
 
 
@@ -22,7 +23,7 @@ urlpatterns = [
     path("polls/<int:pk>/choices/<int:choice_pk>/vote/", CreateVote.as_view(), name="create_vote"),
     path("signup/", UserCreate.as_view(), name="user_create"),
     path("login/", LoginView.as_view(), name="login"),
-    path("all_tweets/users/list/", UserList.as_view(), name="user_list"),
+    path("all_tweets/users/", UserList.as_view(), name="user_list"),
 ]
 
 urlpatterns += router.urls

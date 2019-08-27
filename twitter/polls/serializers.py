@@ -30,7 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password')
+        fields = ('username', 'email', 'password', 'id')
         """
         passwordは書き込みしかできないようにする
         →createのreturn値からpassword, emailを除外する
