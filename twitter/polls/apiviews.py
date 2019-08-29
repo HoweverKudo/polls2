@@ -4,27 +4,10 @@ from rest_framework.response import Response
 
 from .models import Poll, Choice
 from .serializers import PollSerializer, ChoiceSerializer, VoteSerializer, UserSerializer
-from django.contrib.auth.models import User
+from .models import User
 
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import PermissionDenied
-
-
-# class PollList(generics.ListCreateAPIView):
-#     """
-#     genericsのクラスを継承して、Pollモデルを関係付けることで
-#     リストのクラスを簡単に作成できる
-#     """    
-#     queryset = Poll.objects.all()
-#     serializer_class = PollSerializer
-
-# class PollDetail(generics.RetrieveDestroyAPIView):
-#     """
-#     genericsのクラスを継承して、Pollモデルを関係付けることで
-#     詳細データのクラスを簡単に作成できる
-#     """  
-#     queryset = Poll.objects.all()
-#     serializer_class = PollSerializer
 
 class PollViewSet(viewsets.ModelViewSet):
     queryset = Poll.objects.all()
@@ -95,6 +78,9 @@ class UserList(generics.ListAPIView):
         data = UserSerializer(User.objects.select_related(), many=True).data
         return Response(status=200, data=data)
     
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class LoginView(APIView):

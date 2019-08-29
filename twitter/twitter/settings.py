@@ -37,10 +37,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
     'rest_framework',
-    'polls',
     'rest_framework.authtoken',
+    
+    'polls',
     'tweet',
+    
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'rest_auth.registration',
+    'rest_auth',
 ]
 
 MIDDLEWARE = [
@@ -147,4 +156,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     )
 }
+
+LOGOUT_REDIRECT_URL = 'home'
 
