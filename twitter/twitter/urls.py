@@ -19,5 +19,5 @@ from django.contrib import admin
 urlpatterns = [
     # polls.urlsを参照する
     re_path(r'^', include('polls.urls')),
-    url(r'^admin/', admin.site.urls),
+    #url(r'^admin/', admin.site.urls),
 ]

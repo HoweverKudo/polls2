@@ -22,10 +22,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'vrby^m3o2i&z6^b7a#kq*3#alof$5lb1*)_2%6nv-jqj$&qnq9'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# SECURITY WARNING : don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0']
+
+AUTH_USER_MODEL = 'polls.CustumUser'
+
 
 
 # Application definition

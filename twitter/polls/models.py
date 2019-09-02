@@ -1,9 +1,17 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+
+class CustumUser(AbstractUser):
+    follows = models.IntegerField(default=0)
+    # followers = models.IntegerField(default=0)
+    followers = models.ManyToManyField('self', related_name='followed_by', symmetrical=False, blank=True)
+    # is_following = models.ManyToManyField('self', related_name='is_following', symmetrical=False)
+    profile = models.TextField(verbose_name='write your profile here', blank=True, max_length=256)
+
 
 class Poll(models.Model):
     question = models.CharField(max_length=100)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(CustumUser, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -19,7 +27,7 @@ class Choice(models.Model):
 class Vote(models.Model):
     choice = models.ForeignKey(Choice, related_name='vote', on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
-    voted_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    voted_by = models.ForeignKey(CustumUser, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ("poll", "voted_by")

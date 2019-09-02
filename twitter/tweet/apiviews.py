@@ -8,11 +8,13 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
+
 from django import forms
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import UpdateView
+
 
 
 """
@@ -37,7 +39,7 @@ class TweetsViewSet(viewsets.ModelViewSet):
                 もし記述してしまうと、ツイートフォームが二重になってしまう。
     """
     serializer_class = TweetSerializer
-    print(77779)
+    print('\n'+'read inside TweetViewSet \n')
     def post(self, request, *args, **kwargs):
         if int(request.data.get("created_by")) != request.user.id:
             raise PermissionDenied("You cannot create tweet with this user.")
@@ -46,6 +48,30 @@ class TweetsViewSet(viewsets.ModelViewSet):
         if self.get_object().created_by.pk != request.user.id:
             raise PermissionDenied("You cannot delete this tweet.")
         return super().destroy(request, *args, **kwargs)
+
+    @action(methods=['get'], detail=True)
+    def fav(self, request, pk):
+        print(self.kwargs['pk'])
+        tweet_id = self.kwargs['pk']
+        print(tweet_id)
+        tweet = Tweet.objects.get(id=tweet_id)
+        print(tweet)
+        is_fav = Fav.objects.filter(fav_user_id=self.request.user.id).filter(favtweet=tweet).count()
+        print('is_fav:{}'.format(is_fav))
+        # unfav
+        if is_fav ==1:
+            Fav.objects.get(favtweet=tweet,fav_user_id=self.request.user.id).delete()
+            tweet.favs -= 1
+            tweet.save()
+        # fav
+        else :
+            Fav.objects.create(favtweet=tweet,fav_user=self.request.user)
+            tweet.favs += 1
+            tweet.save()
+
+        return Response({'message':'fav succeeded!'})
+        
+
 
 # class TweetsViewSet(viewsets.ModelViewSet):
 #     """

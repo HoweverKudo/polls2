@@ -37,6 +37,7 @@ urlpatterns = [
     # 提供されているlogin, logout　
     # さらに、password/reset/までも提供されている
     path("twitter/v1/rest_auth/", include('rest_auth.urls')),
+    # path("", include('rest_auth.urls')),
 
 
     # 自作（前者）、提供（後者）

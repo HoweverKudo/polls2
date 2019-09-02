@@ -4,10 +4,12 @@ from rest_framework.response import Response
 
 from .models import Poll, Choice
 from .serializers import PollSerializer, ChoiceSerializer, VoteSerializer, UserSerializer
-from .models import User
+from .models import CustumUser
 
 from django.contrib.auth import authenticate
+from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
+
 
 class PollViewSet(viewsets.ModelViewSet):
     queryset = Poll.objects.all()
@@ -72,15 +74,41 @@ class UserList(generics.ListAPIView):
     """
     Listだけ表示したいならListAPIViewを用いる
     """
-    queryset = User.objects.all().select_related()
+    queryset = CustumUser.objects.all().select_related()
     serializer_class = UserSerializer 
     def list(self, request):
-        data = UserSerializer(User.objects.select_related(), many=True).data
+        data = UserSerializer(CustumUser.objects.select_related(), many=True).data
         return Response(status=200, data=data)
     
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = CustumUser.objects.all()
     serializer_class = UserSerializer
+
+    @action(methods=['get'], detail=True)
+    def follow(self, request, pk):
+        # favuser = CustumUser.objects.all().get(username=request.user)
+        # # request.user.followers.add(adduser)
+        # print(favuser.followers.select_related('auth_token').all())
+        # print(favuser.followers)
+        # # favuser = favuser.followers.select_related('auth_token').all()
+        # # print(favuser[0].username)
+        # befaved_user_pk = self.kwargs['pk']
+        # print(int(befaved_user_pk))
+        # befaved_user_id = int(self.kwargs['pk'])
+        # a = CustumUser.objects.all().filter(id=befaved_user_id)
+        # print(a)
+        # print(a[0].followers.add(favuser.id))
+        # print(a[0].followers)
+        # user = User.objects.get(username=username)
+        # fake_tweeter_profiles = user.fake_twitter_profile.followed_by.select_related('user').all()
+        # print(fake_tweeter_profiles)
+    # user = User.objects.get(username=username)
+    # request.user.fake_twitter_profile.follows.add(user.fake_twitter_profile)
+        favuser = CustumUser.objects.all().get(username=request.user)
+        print(favuser.id)
+        befaved_user_id = int(self.kwargs['pk'])
+        CustumUser.objects.all().filter(id=befaved_user_id)[0].followers.add(favuser.id)
+        return Response({'message':'follow succeeded!'})
 
 
 class LoginView(APIView):

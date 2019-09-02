@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Tweet, Fav
-from django.contrib.auth.models import User
+
 
 
 
@@ -10,10 +10,18 @@ class FavSerializer(serializers.ModelDurationField):
         fields = '__all__'
 
 class TweetSerializer(serializers.ModelSerializer):
-    #fav = FavSerializer()
+
+    # fvs = serializers.SerializerMethodField()
+    # def get_fvs(self, instance):
+    #     tw = instance.objects.all()[0]
+    #     t = tw.user.favs
+    #     return t
+
     class Meta:
         """
         もしかしたらfieldsは__all__だとまずいかもしれない
         """
         model = Tweet
-        fields = '__all__'
+        fields = ['user', 'body', 'created_at', 'created_by', 'favs']
+    
+    
