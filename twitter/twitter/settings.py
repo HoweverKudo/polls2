@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'rest_framework',
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
     
     'polls',
     'tweet',
@@ -152,13 +152,14 @@ STATIC_URL = '/static/'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication', 
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     )
 }
 
-LOGOUT_REDIRECT_URL = 'home'
-
+# LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = '/users/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/users/'

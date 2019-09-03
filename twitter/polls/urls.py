@@ -1,9 +1,10 @@
 from django.urls import path, include
 from django.contrib import admin
-from .apiviews import PollViewSet, ChoiceList, CreateVote, UserCreate, LoginView, UserList, UserViewSet
+from django.conf.urls import url
+from .apiviews import PollViewSet, ChoiceList, CreateVote, UserCreate, UserList, UserViewSet, LogoutView
 from tweet.apiviews import TweetsViewSet, FavTweetView
 from rest_framework.routers import DefaultRouter, SimpleRouter
-from rest_framework.authtoken import views
+#from rest_framework.authtoken import views
 from rest_framework.schemas import get_schema_view
 
 schema_view = get_schema_view(title='Twitter API')
@@ -31,24 +32,28 @@ urlpatterns = [
 
 
     # 自作のlogin, logout
-    #path("login/", LoginView.as_view(), name="login"),
-    #path("logout/", account_views.LogoutView.as_view(), name='logout'),
+    # path("login/", LoginView.as_view(), name="login"),
+    path("logout/", LogoutView.as_view(), name='logout'),
+
 
     # 提供されているlogin, logout　
+    # しかし、UserViewSetで作ったuserでのログインとは別のログインになってしまっている
     # さらに、password/reset/までも提供されている
-    path("twitter/v1/rest_auth/", include('rest_auth.urls')),
+    # path("twitter/v1/rest_auth/", include('rest_auth.urls')),
     # path("", include('rest_auth.urls')),
+    # path('accounts/', include('allauth.urls')),
 
+
+
+    # url('api-token-auth/', views.obtain_auth_token),
 
     # 自作（前者）、提供（後者）
-    path("twitter/v1/rest_auth/registration/", include('rest_auth.registration.urls')),
-    path("signup/", UserCreate.as_view(), name="user_create"),
+    # path("twitter/v1/rest_auth/registration/", include('rest_auth.registration.urls')),
+    # path("signup/", UserCreate.as_view(), name="user_create"),
 
-    # favAPI?
+    # favAPI
     path('tweets/<int:pk>/fav', FavTweetView.as_view(), name='fav'),
     
-    # path("twitter/users/", UserList.as_view(), name="user_list"),
-
     path('schema/', schema_view),
 ]
 

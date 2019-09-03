@@ -6,7 +6,7 @@ from .models import Poll, Choice
 from .serializers import PollSerializer, ChoiceSerializer, VoteSerializer, UserSerializer
 from .models import CustumUser
 
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, logout
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
 
@@ -86,31 +86,37 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=True)
     def follow(self, request, pk):
-        # favuser = CustumUser.objects.all().get(username=request.user)
-        # # request.user.followers.add(adduser)
-        # print(favuser.followers.select_related('auth_token').all())
-        # print(favuser.followers)
-        # # favuser = favuser.followers.select_related('auth_token').all()
-        # # print(favuser[0].username)
-        # befaved_user_pk = self.kwargs['pk']
-        # print(int(befaved_user_pk))
-        # befaved_user_id = int(self.kwargs['pk'])
-        # a = CustumUser.objects.all().filter(id=befaved_user_id)
-        # print(a)
-        # print(a[0].followers.add(favuser.id))
-        # print(a[0].followers)
-        # user = User.objects.get(username=username)
-        # fake_tweeter_profiles = user.fake_twitter_profile.followed_by.select_related('user').all()
-        # print(fake_tweeter_profiles)
-    # user = User.objects.get(username=username)
-    # request.user.fake_twitter_profile.follows.add(user.fake_twitter_profile)
-        favuser = CustumUser.objects.all().get(username=request.user)
-        print(favuser.id)
-        befaved_user_id = int(self.kwargs['pk'])
-        CustumUser.objects.all().filter(id=befaved_user_id)[0].followers.add(favuser.id)
+        """
+        following, followers はmanytomanyfieldで実装
+        フォロー・フォロワー数はmodelsの関数で定義する
+        """
+        followuser = CustumUser.objects.all().get(username=request.user)
+        followed_user_id = int(self.kwargs['pk'])
+        """
+        フォロー・フォロワーを追加
+        """
+        CustumUser.objects.all().filter(id=followed_user_id)[0].followers.add(followuser.id)
+        CustumUser.objects.all().filter(id=followuser.id)[0].following.add(followed_user_id)
         return Response({'message':'follow succeeded!'})
 
+    @action(methods=['get'], detail=True)
+    def unfollow(self, request, pk):
+        """
+        following, followers はmanytomanyfieldで実装
+        フォロー・フォロワー数はmodelsの関数で定義する
+        """
+        unfollowuser = CustumUser.objects.all().get(username=request.user)
+        unfollowed_user_id = int(self.kwargs['pk'])
+        """
+        フォロー・フォロワーを追加
+        """
+        CustumUser.objects.all().filter(id=unfollowed_user_id)[0].followers.remove(unfollowuser.id)
+        CustumUser.objects.all().filter(id=unfollowuser.id)[0].following.remove(unfollowed_user_id)
+        return Response({'message':'unfollow succeeded!'})
+    
+    
 
+"""
 class LoginView(APIView):
     permission_classes = ()
 
@@ -122,3 +128,16 @@ class LoginView(APIView):
             return Response({"token": user.auth_token.key})
         else:
             return Response({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
+class LogoutView(APIView):
+    permission_classes = ()
+
+    def post(self, request):
+        logout(request)
+        return Response({"message": "logged out"}, status=status.HTTP_202_ACCEPTED)
+
+"""
+class LogoutView(APIView):
+    def post(self, request):
+        logout(request)
+        return Response()

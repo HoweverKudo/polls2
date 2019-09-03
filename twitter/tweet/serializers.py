@@ -23,5 +23,6 @@ class TweetSerializer(serializers.ModelSerializer):
         """
         model = Tweet
         fields = ['user', 'body', 'created_at', 'created_by', 'favs']
-    
+        extra_kwargs = {'favs': {'read_only': True}}
+        
     
