@@ -49,13 +49,20 @@ class UserSerializer(serializers.ModelSerializer):
         passwordは書き込みしかできないようにする
         →createのreturn値からpassword, emailを除外する
         """
+        read_only_fields = (
+            'follow_num',
+            'follower_num',
+            'following',
+            'followers',
+            'favs',
+        )
         extra_kwargs = {'password': {'write_only': True},
-                            #'email': {'write_only': True},
-                            'follow_num': {'read_only': True},
-                            'follower_num': {'read_only': True},
-                            'following': {'read_only': True},
-                            'followers': {'read_only': True},
-                            'favs': {'read_only': True}}
+                            # 'follow_num': {'read_only': True},
+                            # 'follower_num': {'read_only': True},
+                            # 'following': {'read_only': True},
+                            # 'followers': {'read_only': True},
+                            # 'favs': {'read_only': True}
+                            }
     """
     これをどうにかしたい
     変に動いちゃっているため

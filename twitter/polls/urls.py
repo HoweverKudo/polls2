@@ -1,10 +1,10 @@
 from django.urls import path, include
 from django.contrib import admin
 from django.conf.urls import url
-from .apiviews import PollViewSet, ChoiceList, CreateVote, UserCreate, UserList, UserViewSet, LogoutView
+from .apiviews import PollViewSet, ChoiceList, CreateVote, UserCreate, UserList, UserViewSet, LoginView,LogoutView
 from tweet.apiviews import TweetsViewSet, FavTweetView
 from rest_framework.routers import DefaultRouter, SimpleRouter
-#from rest_framework.authtoken import views
+from auths.apiviews import AuthViewSets
 from rest_framework.schemas import get_schema_view
 
 schema_view = get_schema_view(title='Twitter API')
@@ -24,6 +24,8 @@ router = SimpleRouter()
 router.register('users', UserViewSet, base_name='users')
 router.register('tweets', TweetsViewSet, base_name='tweets')
 
+# router.register('', AuthViewSets, base_name='auth')
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     # クラスとして記述したものをビューに変換して受け取れるようにするのがas_view()メソッド
@@ -32,7 +34,7 @@ urlpatterns = [
 
 
     # 自作のlogin, logout
-    # path("login/", LoginView.as_view(), name="login"),
+    path("login/", LoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name='logout'),
 
 

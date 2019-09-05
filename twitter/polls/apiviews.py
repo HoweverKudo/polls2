@@ -9,6 +9,7 @@ from .models import CustumUser
 from django.contrib.auth import authenticate, logout
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 
 class PollViewSet(viewsets.ModelViewSet):
@@ -116,7 +117,7 @@ class UserViewSet(viewsets.ModelViewSet):
     
     
 
-"""
+
 class LoginView(APIView):
     permission_classes = ()
 
@@ -124,11 +125,12 @@ class LoginView(APIView):
         username = request.data.get("username")
         password = request.data.get("password")
         user = authenticate(username=username, password=password)
+        print(user)
         if user:
-            return Response({"token": user.auth_token.key})
+            return Response({"message": "Login Succeeded"})
         else:
             return Response({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
-
+"""
 class LogoutView(APIView):
     permission_classes = ()
 
