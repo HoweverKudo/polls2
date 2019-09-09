@@ -43,9 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'rest_framework',
-    # 'rest_framework.authtoken',
+    'rest_framework.authtoken',
     
-    # 'auths',
     'polls',
     'tweet',
     
@@ -152,15 +151,24 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.BasicAuthentication', 
+        'rest_framework.authentication.BasicAuthentication', 
         # 'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
+    ),
+        'NON_FIELD_ERRORS_KEY': 'detail',
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
 
 # LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = '/users/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/users/'
+
+
+# JWT_AUTH = {
+#     'JWT_VERIFY_EXPIRATION': False,
+#     'JWT_AUTH_HEADER_PREFIX': 'JWT',
+# }

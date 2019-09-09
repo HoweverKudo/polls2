@@ -57,11 +57,6 @@ class UserSerializer(serializers.ModelSerializer):
             'favs',
         )
         extra_kwargs = {'password': {'write_only': True},
-                            # 'follow_num': {'read_only': True},
-                            # 'follower_num': {'read_only': True},
-                            # 'following': {'read_only': True},
-                            # 'followers': {'read_only': True},
-                            # 'favs': {'read_only': True}
                             }
     """
     これをどうにかしたい

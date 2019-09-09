@@ -45,14 +45,14 @@ class AuthViewSets(viewsets.GenericViewSet):
         # )
         user: 'polls.models.CustumUser' = authenticate(
             request=request,
-            username=request.data.get('username', ''),  
-            password=request.data.get('password', '')
+            username=request.data['username'],  
+            password=request.data['password']
         )
         
-        if user is None:
-            print(request.data.get('password'))
-            print(user)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        # if user is None:
+        #     print(request.data.get('password'))
+        #     print(request.data["username"])
+        #     return Response(status=status.HTTP_400_BAD_REQUEST)
         _login(request, user)
 
         serializer = self.get_serializer(user, context={'request': request})
