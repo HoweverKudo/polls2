@@ -33,15 +33,12 @@ class UserSerializer(serializers.ModelSerializer):
     # 新たなメソッドを定義できる
     # """
     # follow_count = serializers.SerializerMethodField()
-    # follower_count = serializers.SerializerMethodField()
     # """
     # get_関数名()で関数に戻り値を引き渡すことができる
     # これにより、もとのモデルにはない属性をJSONデータとして表示させることができる
     # """
     # def get_follow_count(self, instance):
     #     return 100001
-    # def get_follower_count(self, instance):
-    #     return 8
     class Meta:
         model = CustumUser
         fields = ['username', 'email', 'password', 'id', 'follow_num', 'follower_num', 'following', 'followers', 'profile']
@@ -58,33 +55,3 @@ class UserSerializer(serializers.ModelSerializer):
         )
         extra_kwargs = {'password': {'write_only': True},
                             }
-    """
-    これをどうにかしたい
-    変に動いちゃっているため
-    """
-#     def create(self, validated_data):
-#         """
-#         createメソッドをoverrideする
-#         validated_dataのうち、email, usernameをCustumUserモデルに引き渡す
-#         """
-#         print(validated_data)
-#         user = CustumUser(
-#             email=validated_data['email'],
-#             username=validated_data['username']
-#         )
-#         """
-#         Userモデルから作ったuserデータのpasswordは、validated_dataのpasswordにする
-#         """
-#         user.set_password(validated_data['password'])
-#         user.save()
-#         """
-#         token認証を追加する
-#         ユーザー作成時にtokenもつくる
-#         """
-#         Token.objects.create(user=user)
-#         return user
-    
-# for user in CustumUser.objects.all():
-#     Token.objects.get_or_create(user=user)
-
-

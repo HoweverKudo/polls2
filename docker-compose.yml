@@ -20,8 +20,8 @@ services :
       - "8040:8040"             # 外部公開ポート番号：コンテナのポート番号（存在していないと接続できない）
       # bashを打っておけばとりあえず動かしたままにできる
       # 再現性を意識して実行するcommandを記述すること
-    command : bash -c "sleep 2 && pip install -r twitter/requirements.txt && python twitter/manage.py makemigrations && python twitter/manage.py migrate && python twitter/manage.py runserver 0.0.0.0:8040"
-    #command : bash -c "pip install -r fake_twitter_site/requirements.txt && python fake_twitter_site/manage.py migrate && python fake_twitter_site/manage.py createsuperuser && python fake_twitter_site/manage.py runserver 0.0.0.0:8030"
+    #command : bash -c "sleep 2 && pip install -r twitter/requirements.txt && python twitter/manage.py makemigrations && python twitter/manage.py migrate && python twitter/manage.py runserver 0.0.0.0:8040"
+    command : bash -c "sleep 2&& pip install -r twitter/requirements.txt && apt-get update && apt-get install telnet && python twitter/manage.py makemigrations && python twitter/manage.py migrate && python twitter/manage.py runserver 0.0.0.0:8040"
     #command : bash
     volumes : 
       - ".:/usr/src/app"
@@ -31,6 +31,12 @@ services :
       - db
     links:
       - db:db
+      - memcached
     tty: true
     stdin_open: true
-  
+
+  memcached:
+    image: "memcached:latest"
+    # container_name:　memcached
+    ports: 
+      - "11211:11211"

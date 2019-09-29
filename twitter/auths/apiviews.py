@@ -33,26 +33,24 @@ class AuthViewSets(viewsets.GenericViewSet):
     def login(self, request):
         """ログイン API
         """
-        # リクエスト内容をバリデーション
-        validation_serializer = self.get_serializer(
-            data=request.data, context={'request': request}
-        )
-        validation_serializer.is_valid(raise_exception=True)
-
-        # user: 'polls.models.CustumUser' = authenticate(
-        #     request=request,
-        #     password=request.data.get('password', '')
+        print("hello")
+        # リクエスト内容をバリデート
+        # validation_serializer = self.get_serializer(
+        #     data=request.data, context={'request': request}
         # )
+        # validation_serializer.is_valid(raise_exception=True)
+
+        
         user: 'polls.models.CustumUser' = authenticate(
-            request=request,
+            request,
             username=request.data['username'],  
             password=request.data['password']
         )
         
-        # if user is None:
-        #     print(request.data.get('password'))
-        #     print(request.data["username"])
-        #     return Response(status=status.HTTP_400_BAD_REQUEST)
+        if user is None:
+            print(request.data.get('password'))
+            print(request.data["username"])
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         _login(request, user)
 
         serializer = self.get_serializer(user, context={'request': request})

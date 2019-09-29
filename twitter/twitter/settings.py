@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'rest_auth.registration',
     'rest_auth',
+
+    'djoser',
 ]
 
 MIDDLEWARE = [
@@ -151,24 +153,23 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication', 
+        # 'rest_framework.authentication.BasicAuthentication', 
         # 'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-        'NON_FIELD_ERRORS_KEY': 'detail',
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+
 }
 
-# LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = '/users/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/users/'
 
 
-# JWT_AUTH = {
-#     'JWT_VERIFY_EXPIRATION': False,
-#     'JWT_AUTH_HEADER_PREFIX': 'JWT',
-# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '172.26.0.3:11211',
+        # memcacheのサーバーであり、djangoのサーバーとは別物
+        # 複数のサーバを指定して分散させることもできる
+    }
+}
