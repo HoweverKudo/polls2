@@ -11,6 +11,9 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
 
 class PollViewSet(viewsets.ModelViewSet):
     queryset = Poll.objects.all()
@@ -114,6 +117,10 @@ class UserViewSet(viewsets.ModelViewSet):
         CustumUser.objects.all().filter(id=unfollowed_user_id)[0].followers.remove(unfollowuser.id)
         CustumUser.objects.all().filter(id=unfollowuser.id)[0].following.remove(unfollowed_user_id)
         return Response({'message':'unfollow succeeded!'})
+    @method_decorator(cache_page(60*15))
+    def list(self, *args, **kwargs):
+        return super().list(*args, **kwargs)
+    
     
     
 

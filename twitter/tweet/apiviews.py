@@ -13,7 +13,7 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, ListView
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -32,17 +32,10 @@ from django.views.decorators.cache import cache_page
 class TweetsViewSet(viewsets.ModelViewSet):
     queryset = Tweet.objects.all()
     """
-    tweetsのところに相当している
-    postは全ユーザーでできるようになっている：あとで認証をかけることで解決できそう
-        　どうやらここのpostメソッドが一番最初に読み込まれ、
-        それがすべてのツイート可能ページに反映されるらしい。
-        　したがって他のpostメソッドを改めて他のViewSetで記述する必要はない。
-                もし記述してしまうと、ツイートフォームが二重になってしまう。
     """
     serializer_class = TweetSerializer
     print('\n'+'read inside TweetViewSet \n')
     def post(self, request, *args, **kwargs):
-        print(7777777777777497)
         print(request.user.id)
         print(self.get_object().created_by.pk)
         if int(request.data.get("created_by")) != request.user.id:
@@ -76,6 +69,18 @@ class TweetsViewSet(viewsets.ModelViewSet):
             tweet.save()
 
         return Response({'message':'fav succeeded!'})
+    
+    @method_decorator(cache_page(60*15))
+    def list(self, *args, **kwargs):
+        return super().list(*args, **kwargs)
+
+class UserTweetsView(generics.ListCreateAPIView):
+    def get_queryset(self):
+        return Tweet.objects.all().filter(created_by=self.kwargs['pk'])
+    serializer_class = TweetSerializer
+    print(79797979)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
 
 class FavTweetView(UpdateView):
